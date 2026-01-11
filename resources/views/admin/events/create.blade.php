@@ -13,24 +13,25 @@
                     <form action="{{ route('events.store') }}" method="POST">
                         @csrf
 
-                        <div class="mb-4">
-                            <x-input-label for="event_category_id" value="Jenis Acara" />
-                            <select name="event_category_id" id="event_category_id"
-                                class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                @foreach ($categories as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                @endforeach
-                            </select>
-                            <x-input-error :messages="$errors->get('event_category_id')" class="mt-2" />
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="mb-4">
+                                <x-input-label for="event_category_id" value="Jenis Acara" />
+                                <select name="event_category_id" id="event_category_id"
+                                    class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                    @foreach ($categories as $cat)
+                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error :messages="$errors->get('event_category_id')" class="mt-2" />
+                            </div>
 
-                        <div class="mb-4">
-                            <x-input-label for="title" value="Nama Acara" />
-                            <x-text-input id="title" class="block mt-1 w-full" type="text" name="title"
-                                required />
-                            <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                            <div class="mb-4">
+                                <x-input-label for="title" value="Nama Acara" />
+                                <x-text-input id="title" class="block mt-1 w-full" type="text" name="title"
+                                    required />
+                                <x-input-error :messages="$errors->get('title')" class="mt-2" />
+                            </div>
                         </div>
-
                         <div class="mb-4">
                             <x-input-label for="description" value="Deskripsi Singkat" />
                             <textarea id="description" name="description" rows="3"
@@ -55,13 +56,26 @@
                             </div>
                         </div>
 
-                        <div class="mb-4">
-                            <x-input-label for="quota" value="Kuota Peserta" />
-                            <x-text-input id="quota" class="block mt-1 w-full" type="number" name="quota"
-                                value="100" required />
-                            <x-input-error :messages="$errors->get('quota')" class="mt-2" />
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="mb-3">
+                                <x-input-label for="quota" value="Kuota Peserta" />
+                                <x-text-input id="quota" class="block mt-1 w-full" type="number" name="quota"
+                                    value="100" required />
+                                <x-input-error :messages="$errors->get('quota')" class="mt-2" />
+                            </div>
 
+                            <div class="form-group mb-3">
+                                <label for="is_open" class="form-label fw-bold">Status Pendaftaran</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="is_open" name="is_open"
+                                        value="1" {{ old('is_open', $event->is_open ?? true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_open">Buka Pendaftaran</label>
+                                </div>
+                                <small class="text-muted">Hilangkan centang untuk menutup pendaftaran secara
+                                    manual.</small>
+                            </div>
+
+                        </div>
                         <div class="flex items-center gap-4 mt-6">
                             <x-primary-button>{{ __('Simpan Acara') }}</x-primary-button>
 

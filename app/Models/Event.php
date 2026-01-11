@@ -10,12 +10,13 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'event_category_id', // <-- Kolom Baru
+        'event_category_id', 
         'title',
         'description',
         'event_date',
         'location',
-        'quota'              // <-- Kolom Baru
+        'quota',
+        'is_open'
     ];
 
     // Relasi: Satu Event punya Satu Kategori

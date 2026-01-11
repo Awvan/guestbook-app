@@ -125,7 +125,7 @@ class ScanController extends Controller
             }
         ])
             ->orderBy('event_date', 'desc')
-            ->paginate(10); // Batasi 10 Acara per halaman (Angka 1 tadi kekecilan bro hehe)
+            ->paginate(2); // Batasi 2 Acara per halaman
 
         return view('admin.participants', compact('events'));
     }

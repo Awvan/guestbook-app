@@ -73,8 +73,13 @@ class EventController extends Controller
             'event_date' => 'required|date', // Harus format tanggal valid
             'location' => 'required',
             'quota' => 'required|integer|min:1', // Kuota minimal 1 orang
+            'is_open' => 'boolean', // <--- Validasi baru (opsional, tapi bagus)
         ]);
 
+        // Trik biar checkbox terbaca (karena checkbox html kalau ga dicentang dia ga kirim data)
+        $data = $request->all();
+        $data['is_open'] = $request->has('is_open');
+        Event::create($data);
         // Simpan data pakai Mass Assignment (aman karena sudah divalidasi)
         Event::create($validated);
 
@@ -114,6 +119,10 @@ class EventController extends Controller
             'location' => 'required',
             'quota' => 'required|integer|min:1',
         ]);
+        $data = $request->all();
+    $data['is_open'] = $request->has('is_open'); // Cek apakah checkbox dicentang
+
+    $event->update($data);
 
         // Method update() otomatis mengganti data lama dengan yang baru
         $event->update($validated);
@@ -132,4 +141,21 @@ class EventController extends Controller
         $event->delete();
         return redirect()->route('events.index')->with('success', 'Acara berhasil dihapus.');
     }
+
+    /**
+     * Fitur Saklar: Buka/Tutup Pendaftaran via Tombol Cepat
+     */
+    public function toggleStatus(Event $event)
+    {
+        // Update status kebalikan dari sekarang (True jadi False, False jadi True)
+        $event->update([
+            'is_open' => !$event->is_open
+        ]);
+
+        $statusText = $event->is_open ? 'DIBUKA' : 'DITUTUP';
+
+        // redirect back() fungsinya biar tetep di halaman tabel, gak mental kemana-mana
+        return back()->with('success', "Status pendaftaran acara berhasil $statusText.");
+    }
+
 }

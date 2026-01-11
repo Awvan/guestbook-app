@@ -28,18 +28,13 @@ class RegistrationController extends Controller
     public function showForm($id)
     {
         // Ambil data acara beserta kategorinya
-        // findOrFail berfungsi: jika ID tidak ketemu, otomatis error 404
         $event = Event::with('category')->findOrFail($id);
-
-        // --- LOGIKA 1: CEK BATAS WAKTU (H-1) ---
-        // Carbon::parse mengubah string tanggal database jadi objek tanggal
-        // subDay() mengurangi 1 hari dari tanggal acara
-        // greaterThanOrEqualTo() membandingkan waktu sekarang dengan batas H-1
-        if (now()->greaterThanOrEqualTo(Carbon::parse($event->event_date)->subDay())) {
-            // Jika telat, tampilkan view khusus "Pendaftaran Ditutup"
+        // --- REVISI 1: GANTI LOGIKA H-1 JADI CEK DATABASE --
+        // Logika Baru (Cek kolom is_open):
+        if (!$event->is_open) {
             return view('registration.closed', [
                 'title' => 'Pendaftaran Ditutup',
-                'message' => 'Mohon maaf, pendaftaran untuk acara ini sudah ditutup karena acara akan dimulai besok (H-1) atau sudah lewat.'
+                'message' => 'Mohon maaf, pendaftaran sedang ditutup oleh panitia.'
             ]);
         }
 

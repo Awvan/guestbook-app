@@ -34,7 +34,9 @@ Route::get('/admin/participants/{id}/edit', [App\Http\Controllers\Admin\ScanCont
 Route::put('/admin/participants/{id}', [App\Http\Controllers\Admin\ScanController::class, 'updateParticipant'])->name('admin.participants.update');
 Route::delete('/admin/participants/{id}', [App\Http\Controllers\Admin\ScanController::class, 'destroyParticipant'])->name('admin.participants.destroy');
 
-    Route::resource('events', EventController::class);
+Route::resource('events', EventController::class);
+    // Route khusus buat saklar Buka/Tutup
+Route::patch('/events/{event}/toggle-status', [EventController::class, 'toggleStatus'])->name('events.toggle');
 });
 
 // Route Publik (Bisa diakses tanpa login)

@@ -102,13 +102,72 @@
                             </div>
                         </div>
 
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+    @php
+        $sisaKuota = $event->quota - $event->registrations_count;
+        // Hitung persentase keterisian untuk Progress Bar
+        $persenTerisi = $event->quota > 0 ? ($event->registrations_count / $event->quota) * 100 : 100;
+
+        // Tentukan warna progress bar
+        $warnaBar = 'bg-indigo-600';
+        if($persenTerisi >= 90) $warnaBar = 'bg-red-500'; // Merah kalau mau penuh
+        elseif($persenTerisi >= 75) $warnaBar = 'bg-yellow-500'; // Kuning kalau 3/4
+    @endphp
+
+    <div class="flex justify-between text-xs font-semibold mb-1 text-gray-500">
+        <span>Keterisian</span>
+        <span>{{ round($persenTerisi) }}%</span>
+    </div>
+    <div class="w-full bg-gray-100 rounded-full h-2 mb-4">
+        <div class="{{ $warnaBar }} h-2 rounded-full transition-all duration-500"
+             style="width: {{ $persenTerisi }}%"></div>
+    </div>
+
+    <div class="flex items-center justify-between gap-2">
+
+        <div class="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+            <div class="flex flex-col">
+                <span class="text-[10px] uppercase text-gray-400 font-bold leading-none">Kuota</span>
+                <span class="text-sm font-bold text-gray-700 leading-none">{{ $event->quota }}</span>
+            </div>
+        </div>
+
+        @if ($sisaKuota > 0)
+            <div class="flex items-center gap-1.5 bg-green-50 px-3 py-1.5 rounded-lg border border-green-100">
+                <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-[10px] uppercase text-green-600 font-bold leading-none">Tersedia</span>
+                    <span class="text-sm font-bold text-green-700 leading-none">{{ $sisaKuota }}</span>
+                </div>
+            </div>
+        @else
+            <div class="flex items-center gap-1.5 bg-red-50 px-3 py-1.5 rounded-lg border border-red-100">
+                <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="text-[10px] uppercase text-red-600 font-bold leading-none">Status</span>
+                    <span class="text-sm font-bold text-red-700 leading-none">Penuh</span>
+                </div>
+            </div>
+        @endif
+
+    </div>
+</div>
+
                         @if ($isPenuh)
                             <button disabled
                                 class="block w-full py-3 px-4 rounded-xl font-bold text-center bg-gray-200 text-gray-400 cursor-not-allowed uppercase text-sm">
                                 Kuota Penuh
                             </button>
                         @else
-                            <a href="{{ route('registration.form', $event->id) }}"
+
+                             <br><a href="{{ route('registration.form', $event->id) }}"
                                 class="block w-full py-3 px-4 rounded-xl font-bold text-center bg-indigo-600 text-white hover:bg-indigo-700 shadow-md hover:shadow-indigo-200 transition uppercase text-sm">
                                 Daftar Sekarang
                             </a>
